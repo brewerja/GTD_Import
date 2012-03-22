@@ -1,0 +1,124 @@
+#!/usr/bin/python
+
+import sys
+import csv
+import psycopg2
+
+DATABASE = 'dbname'
+USER = 'username'
+
+countries_file = open('countries', 'r')
+regions_file = open('regions', 'r')
+alternatives = open('alternatives', 'r')
+attack_types = open('attack_types', 'r')
+target_types = open('target_types', 'r')
+claim_modes = open('claim_modes', 'r')
+weapon_types = open('weapon_types', 'r')
+weapon_subtypes = open('weapon_subtypes', 'r')
+damage = open('damage', 'r')
+hostage_outcomes = open('hostage_outcomes', 'r')
+
+con = None
+
+try:
+    # Connect to the database.
+    con = psycopg2.connect(database=DATABASE, user=USER)
+    cur = con.cursor()
+
+    # Create the alternatives table and populate it.
+    cur.execute('CREATE TABLE alternatives(id INT PRIMARY KEY, name '
+                'VARCHAR(35))')
+    for type in alternatives:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO alternatives VALUES(%s, '%s')" % (n, name))
+    alternatives.close()
+
+    # Create the hostage outcomes table and populate it.
+    cur.execute('CREATE TABLE hostage_outcomes(id INT PRIMARY KEY, name '
+                'VARCHAR(50))')
+    for type in hostage_outcomes:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO hostage_outcomes VALUES(%s, '%s')" %
+                    (n, name))
+    hostage_outcomes.close()
+
+    # Create the damage table and populate it.
+    cur.execute('CREATE TABLE damage(id INT PRIMARY KEY, name VARCHAR(50))')
+    for type in damage:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO damage VALUES(%s, '%s')" % (n, name))
+    damage.close()
+
+    # Create the weapon subtypes table and populate it.
+    cur.execute('CREATE TABLE weapon_subtypes(id INT PRIMARY KEY, name '
+                'VARCHAR(50))')
+    for type in weapon_subtypes:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO weapon_subtypes VALUES(%s, '%s')" % (n, name))
+    weapon_subtypes.close()
+
+    # Create the weapon types table and populate it.
+    cur.execute('CREATE TABLE weapon_types(id INT PRIMARY KEY, name '
+                'VARCHAR(50))')
+    for type in weapon_types:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO weapon_types VALUES(%s, '%s')" % (n, name))
+    weapon_types.close()
+
+    # Create the claim modes table and populate it.
+    cur.execute('CREATE TABLE claim_modes(id INT PRIMARY KEY, name '
+                'VARCHAR(35))')
+    for mode in claim_modes:
+        n = mode.split('=')[0].strip()
+        name = mode.split('=')[1].strip()
+        cur.execute("INSERT INTO claim_modes VALUES(%s, '%s')" % (n, name))
+    claim_modes.close()
+
+    # Create the target types table and populate it.
+    cur.execute('CREATE TABLE target_types(id INT PRIMARY KEY, name '
+                'VARCHAR(35))')
+    for type in target_types:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO target_types VALUES(%s, '%s')" % (n, name))
+    target_types.close()
+
+    # Create the attack types table and populate it.
+    cur.execute('CREATE TABLE attack_types(id INT PRIMARY KEY, name '
+                'VARCHAR(35))')
+    for type in attack_types:
+        n = type.split('=')[0].strip()
+        name = type.split('=')[1].strip()
+        cur.execute("INSERT INTO attack_types VALUES(%s, '%s')" % (n, name))
+    attack_types.close()
+
+    # Create the countries table and populate it.
+    cur.execute('CREATE TABLE countries(id INT PRIMARY KEY, name VARCHAR(35))')
+    for country in countries_file:
+        n = country.split('=')[0].strip()
+        name = country.split('=')[1].strip()
+        cur.execute("INSERT INTO countries VALUES(%s, '%s')" % (n, name))
+    countries_file.close()
+
+    # Create the regions table and populate it.
+    cur.execute('CREATE TABLE regions(id INT PRIMARY KEY, name VARCHAR(45))')
+    for region in regions_file:
+        n = region.split('=')[0].strip()
+        name = region.split('=')[1].strip()
+        cur.execute("INSERT INTO regions VALUES(%s, '%s')" % (n, name))
+    regions_file.close()
+
+    con.commit()
+
+except psycopg2.DatabaseError, e:
+    print 'Error %s' % e
+    sys.exit(1)
+
+finally:
+    if con:
+        con.close()

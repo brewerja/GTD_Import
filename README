@@ -1,0 +1,7 @@
+Scripts and other tools to import the data from the Global Terrorism Database into a Postgresql database for further work.
+
+Steps to create and populate the database:
+
+1. python create_subtables.py
+2. \i create_table.sql (from postgres command line) 
+3. python insert_data.py
