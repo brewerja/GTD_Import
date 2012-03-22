@@ -48,7 +48,7 @@ def bools(value):
         return repr(value)
 
 
-reader = csv.reader(open('gtd.csv', 'rb'))
+reader = csv.reader(open('data/gtd.csv', 'rb'))
 months = range(1, 13)
 days = range(1, 32)
 
@@ -82,9 +82,9 @@ try:
                         (date, id))
 
         # III. Incident Location
-        country, region = l[7], l[9]  # Integers, Unknown = -99
+        country, region = l[7], l[9]
         provstate, city = pstr(l[11]), pstr(l[12])
-        vicinity, location = bools(l[13]), pstr(l[14])  # 13 is a boolean
+        vicinity, location = bools(l[13]), pstr(l[14])
         stmt = ("UPDATE gtd SET country=%s, region=%s, provstate=%s, "
                 "city=%s, vicinity=%s, location=%s where id=%s" %
                 (country, region, provstate, city, vicinity, location, id))
@@ -147,7 +147,6 @@ try:
         cur.execute(stmt)
 
         # IX. Perpetrator Claim of Responsibility
-        # 1,0,-9 claimed, claimconf
         claimed, claimmode, claimconf = bools(l[62]), eno(l[63]), bools(l[65])
         claim2, claimmode2, claimconf2 = bools(l[66]), eno(l[67]), bools(l[69])
         claim3, claimmode3, claimconf3 = bools(l[70]), eno(l[71]), bools(l[73])

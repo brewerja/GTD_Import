@@ -6,16 +6,16 @@ import psycopg2
 
 from settings import DATABASE, USER
 
-countries_file = open('countries', 'r')
-regions_file = open('regions', 'r')
-alternatives = open('alternatives', 'r')
-attack_types = open('attack_types', 'r')
-target_types = open('target_types', 'r')
-claim_modes = open('claim_modes', 'r')
-weapon_types = open('weapon_types', 'r')
-weapon_subtypes = open('weapon_subtypes', 'r')
-damage = open('damage', 'r')
-hostage_outcomes = open('hostage_outcomes', 'r')
+countries_file = open('data/countries', 'r')
+regions_file = open('data/regions', 'r')
+alternatives = open('data/alternatives', 'r')
+attack_types = open('data/attack_types', 'r')
+target_types = open('data/target_types', 'r')
+claim_modes = open('data/claim_modes', 'r')
+weapon_types = open('data/weapon_types', 'r')
+weapon_subtypes = open('data/weapon_subtypes', 'r')
+damage = open('data/damage', 'r')
+hostage_outcomes = open('data/hostage_outcomes', 'r')
 
 con = None
 

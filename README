@@ -6,3 +6,13 @@ Steps to create and populate the database:
      Creates all the subtables for foreign keys as well as the master 'gtd' table.
 2. python insert_data.py
      Reads each line of gtd.csv and imports it into the chosen database.
+
+Detailed information about the database can be found online:
+    http://www.start.umd.edu/gtd/downloads/Codebook.pdf
+
+It can be downloaded in .xlsx format:
+    http://www.start.umd.edu/gtd/contact/
+
+The gtd.csv file in this repository is a simple CSV export from Excel with the following tweaks:
+    The countries file contains 192 = St. Martin, which is not listed in the codebook.
+    Incident #200002250007 has a 'claimed' attribute of '2', which is non-valid and ignored.
