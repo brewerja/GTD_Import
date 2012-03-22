@@ -4,8 +4,7 @@ import sys
 import csv
 import psycopg2
 
-DATABASE = 'dbname'
-USER = 'username'
+from settings import DATABASE, USER
 
 
 def pstr(string):

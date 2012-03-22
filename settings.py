@@ -1,0 +1,2 @@
+DATABASE = 'testdb'
+USER = 'jbrewer'

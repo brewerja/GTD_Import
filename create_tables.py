@@ -4,8 +4,7 @@ import sys
 import csv
 import psycopg2
 
-DATABASE = 'dbname'
-USER = 'username'
+from settings import DATABASE, USER
 
 countries_file = open('countries', 'r')
 regions_file = open('regions', 'r')
@@ -112,6 +111,11 @@ try:
         name = region.split('=')[1].strip()
         cur.execute("INSERT INTO regions VALUES(%s, '%s')" % (n, name))
     regions_file.close()
+
+    # Create the master 'gtd' table in preparation for inserting data.
+    stmt = open('create_gtd_table.sql', 'rb').read()
+    cur.execute(stmt)
+    cur.execute('ALTER TABLE gtd OWNER TO %s' % USER)
 
     con.commit()
 

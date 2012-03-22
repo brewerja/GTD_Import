@@ -181,5 +181,3 @@ CREATE TABLE gtd
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE gtd
-  OWNER TO username;
