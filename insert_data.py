@@ -8,41 +8,34 @@ from settings import DATABASE, USER
 
 
 def pstr(string):
-    string = string.decode('latin-1').replace("'", "''")
+    """Processing for a varchar or text column. Returns any text in UTF-8."""
     if not string:
         return 'NULL'
     else:
+        string = string.decode('latin-1').replace("'", "''")
         return "'" + string + "'"
 
 
-def inull(integer):
-    if not integer:
+def intgr(integer):
+    """Processsing for an integer column."""
+    if not integer or integer == '0' or integer == '-9' or integer == '-99':
         return 'NULL'
     else:
-        if float(integer) % 1 < 1 and float(integer) % 1 > 0:
-            return float(integer)
-        integer = int(integer)
-        if integer == -9 or integer == -99:
-            return 'NULL'
-        else:
-            return integer
+        return int(integer)
 
 
-def eno(value):
-    if not value:
-        return 'NULL'
-    elif value == '0' or value == '-9':
+def floatr(number):
+    """Processsing for a real (float) column."""
+    if not number or number == '-9' or number == '-99':
         return 'NULL'
     else:
-        return repr(value)
+        return float(number)
 
 
 def bools(value):
-    if value == '-9':
-        return 'NULL'
-    elif not value:
-        return 'NULL'
-    elif value != '0' and value != '1':  # See 20000225007 claimed = '2'
+    """Processing for a boolean column. Returns "'0'" or "'1'" or 'NULL'"""
+    # See 20000225007 claimed = '2'
+    if value != '0' and value != '1':
         return 'NULL'
     else:
         return repr(value)
@@ -93,7 +86,7 @@ try:
         # IV. Incident Information
         (summary, crit1, crit2, crit3, doubtterr, alternative, multiple,
         conflict) = (pstr(l[15]), bools(l[16]), bools(l[17]), bools(l[18]),
-                     bools(l[19]), inull(l[20]), bools(l[22]), bools(l[23]))
+                     bools(l[19]), intgr(l[20]), bools(l[22]), bools(l[23]))
         stmt = ("UPDATE gtd SET summary=%s, crit1=%s, crit2=%s, crit3=%s, "
                 "doubtterr=%s, alternative=%s, multiple=%s, conflict=%s where "
                 "id=%s" % (summary, crit1, crit2, crit3, doubtterr,
@@ -102,20 +95,20 @@ try:
 
         # V. Attack Information
         success, suicide = bools(l[24]), bools(l[25])
-        attacktype1, attacktype2, attacktype3 = (eno(l[26]), eno(l[28]),
-                                                                 eno(l[30]))
+        attacktype1, attacktype2, attacktype3 = (intgr(l[26]), intgr(l[28]),
+                                                 intgr(l[30]))
         stmt = ("UPDATE gtd SET success=%s, suicide=%s, attacktype1=%s, "
                 "attacktype2=%s, attacktype3=%s where id=%s" %
                 (success, suicide, attacktype1, attacktype2, attacktype3, id))
         cur.execute(stmt)
 
         # VI. Target/Victim Information
-        targtype1, corp1, target1, natlty1 = (eno(l[32]), pstr(l[34]),
-                                              pstr(l[35]), eno(l[36]))
-        targtype2, corp2, target2, natlty2 = (eno(l[38]), pstr(l[40]),
-                                              pstr(l[41]), eno(l[42]))
-        targtype3, corp3, target3, natlty3 = (eno(l[44]), pstr(l[46]),
-                                              pstr(l[47]), eno(l[48]))
+        targtype1, corp1, target1, natlty1 = (intgr(l[32]), pstr(l[34]),
+                                              pstr(l[35]), intgr(l[36]))
+        targtype2, corp2, target2, natlty2 = (intgr(l[38]), pstr(l[40]),
+                                              pstr(l[41]), intgr(l[42]))
+        targtype3, corp3, target3, natlty3 = (intgr(l[44]), pstr(l[46]),
+                                              pstr(l[47]), intgr(l[48]))
         stmt = ("UPDATE gtd SET targtype1=%s, corp1=%s, target1=%s, "
                 "natlty1=%s, targtype2=%s, corp2=%s, target2=%s, "
                 "natlty2=%s, targtype3=%s, corp3=%s, target3=%s, "
@@ -141,15 +134,18 @@ try:
 
         # VIII. Perpetrator Statistics
         # nperps -99 or Unknown when not reported
-        nperps, nperpcap = inull(l[60]), inull(l[61])
+        nperps, nperpcap = intgr(l[60]), intgr(l[61])
         stmt = ("UPDATE gtd SET nperps=%s, nperpcap=%s where id=%s" %
                 (nperps, nperpcap, id))
         cur.execute(stmt)
 
         # IX. Perpetrator Claim of Responsibility
-        claimed, claimmode, claimconf = bools(l[62]), eno(l[63]), bools(l[65])
-        claim2, claimmode2, claimconf2 = bools(l[66]), eno(l[67]), bools(l[69])
-        claim3, claimmode3, claimconf3 = bools(l[70]), eno(l[71]), bools(l[73])
+        claimed, claimmode, claimconf = (bools(l[62]), intgr(l[63]),
+                                         bools(l[65]))
+        claim2, claimmode2, claimconf2 = (bools(l[66]), intgr(l[67]),
+                                          bools(l[69]))
+        claim3, claimmode3, claimconf3 = (bools(l[70]), intgr(l[71]),
+                                          bools(l[73]))
         compclaim = bools(l[74])
         stmt = ("UPDATE gtd SET claimed=%s, claimmode=%s, claimconf=%s, "
                 "claim2=%s, claimmode2=%s, claimconf2=%s, claim3=%s, "
@@ -159,10 +155,10 @@ try:
         cur.execute(stmt)
 
         # X. Weapon Information
-        weaptype1, weapsubtype1 = eno(l[75]), eno(l[77])
-        weaptype2, weapsubtype2 = eno(l[79]), eno(l[81])
-        weaptype3, weapsubtype3 = eno(l[83]), eno(l[85])
-        weaptype4, weapsubtype4 = eno(l[87]), eno(l[89])
+        weaptype1, weapsubtype1 = intgr(l[75]), intgr(l[77])
+        weaptype2, weapsubtype2 = intgr(l[79]), intgr(l[81])
+        weaptype3, weapsubtype3 = intgr(l[83]), intgr(l[85])
+        weaptype4, weapsubtype4 = intgr(l[87]), intgr(l[89])
         weapdetail = pstr(l[91])
         stmt = ("UPDATE gtd SET weaptype1=%s, weapsubtype1=%s, weaptype2=%s, "
                 "weapsubtype2=%s, weaptype3=%s, weapsubtype3=%s, "
@@ -172,8 +168,9 @@ try:
         cur.execute(stmt)
 
         # XI. Casualty Information
-        nkill, nkillus, nkillter = inull(l[92]), inull(l[93]), inull(l[94])
-        nwound, nwoundus, nwoundter = inull(l[95]), inull(l[96]), inull(l[97])
+        nkill, nkillus, nkillter = floatr(l[92]), floatr(l[93]), floatr(l[94])
+        nwound, nwoundus, nwoundter = (floatr(l[95]), floatr(l[96]),
+                                       floatr(l[97]))
         stmt = ("UPDATE gtd SET nkill=%s, nkillus=%s, nkillter=%s, nwound=%s, "
                 "nwoundus=%s, nwoundter=%s where id=%s" %
                 (nkill, nkillus, nkillter, nwound, nwoundus, nwoundter, id))
@@ -181,7 +178,7 @@ try:
 
         # XII. Consequences
         property, propextent, propvalue, propcomment = \
-                (bools(l[98]), eno(l[99]), inull(l[101]), pstr(l[102]))
+                (bools(l[98]), intgr(l[99]), floatr(l[101]), pstr(l[102]))
         stmt = ("UPDATE gtd SET property=%s, propextent=%s, propvalue=%s, "
                 "propcomment=%s where id=%s" % (property, propextent,
                                                 propvalue,  propcomment, id))
@@ -191,10 +188,10 @@ try:
         (ishostkid, nhostkid, nhostkidus, nhours, ndays, divert,
         kidhijcountry, ransom, ransomamt, ransomamtus, ransompaid,
         ransompaidus, ransomnote, hostkidoutcome, nreleased) = \
-        (bools(l[103]), inull(l[104]), inull(l[105]), inull(l[106]),
-         inull(l[107]), pstr(l[108]), pstr(l[109]), bools(l[110]),
-         inull(l[111]), inull(l[112]), inull(l[113]), inull(l[114]),
-         pstr(l[115]), inull(l[116]), inull(l[118]))
+        (bools(l[103]), floatr(l[104]), floatr(l[105]), floatr(l[106]),
+         intgr(l[107]), pstr(l[108]), pstr(l[109]), bools(l[110]),
+         floatr(l[111]), floatr(l[112]), floatr(l[113]), floatr(l[114]),
+         pstr(l[115]), intgr(l[116]), floatr(l[118]))
         stmt = ("UPDATE gtd SET ishostkid=%s, nhostkid=%s, nhostkidus=%s, "
                 "nhours=%s, ndays=%s, divert=%s, kidhijcountry=%s, ransom=%s, "
                 "ransomamt=%s, ransomamtus=%s, ransompaid=%s, ransompaidus=%s,"
