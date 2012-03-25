@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import sys
 import csv
 import psycopg2

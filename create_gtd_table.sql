@@ -15,6 +15,8 @@ CREATE TABLE gtd
   city character varying(100),
   vicinity boolean,
   location text,
+  lat real,
+  lon real,
   summary text,
   crit1 boolean,
   crit2 boolean,

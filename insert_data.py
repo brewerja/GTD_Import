@@ -41,6 +41,7 @@ def bools(value):
         return repr(value)
 
 
+os.system('tar xzvf data/gtd.tgz')
 reader = csv.reader(open('data/gtd.csv', 'rb'))
 months = range(1, 13)
 days = range(1, 32)
@@ -213,6 +214,17 @@ try:
         cur.execute(stmt)
 
     con.commit()
+
+    # Create cities table, populate gtd table with that data, then drop it.
+    os.system('tar xzvf cities.tgz')
+    os.system('psql -d %s -U %s -f cities.sql' % (DATABASE, USER))
+    cur.execute('update grd set lat=cities.lat, lon=cities.lon from cities'
+                'where cities.id=gtd.id')
+    cur.execute('drop table cities')
+    con.commit()
+
+    os.system('rm cities.sql')
+    os.system('rm data/gtd.sql')
 
 except psycopg2.DatabaseError, e:
     print 'Error %s' % e
