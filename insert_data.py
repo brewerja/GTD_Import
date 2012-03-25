@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import sys
 import csv
 import psycopg2
@@ -41,7 +42,9 @@ def bools(value):
         return repr(value)
 
 
-os.system('tar xzvf data/gtd.tgz')
+os.chdir('data')
+os.system('tar xzvf gtd.tgz')
+os.chdir('..')
 reader = csv.reader(open('data/gtd.csv', 'rb'))
 months = range(1, 13)
 days = range(1, 32)
@@ -218,13 +221,13 @@ try:
     # Create cities table, populate gtd table with that data, then drop it.
     os.system('tar xzvf cities.tgz')
     os.system('psql -d %s -U %s -f cities.sql' % (DATABASE, USER))
-    cur.execute('update grd set lat=cities.lat, lon=cities.lon from cities'
+    cur.execute('update gtd set lat=cities.lat, lon=cities.lon from cities'
                 'where cities.id=gtd.id')
     cur.execute('drop table cities')
     con.commit()
 
     os.system('rm cities.sql')
-    os.system('rm data/gtd.sql')
+    os.system('rm data/gtd.csv')
 
 except psycopg2.DatabaseError, e:
     print 'Error %s' % e

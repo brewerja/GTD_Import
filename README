@@ -1,10 +1,12 @@
 Scripts and other tools to import the data from the Global Terrorism Database into a Postgresql database for further work.
 
 Steps to create and populate the database:
-  1. Edit settings.py to reflect the desired username and database.
-  2. python create_tables.py
+  1. createdb -T template_postgis dbname
+     (Optional) Create a postgis enabled database.
+  2. Edit settings.py to reflect the desired username and database.
+  3. python create_tables.py
      Creates all the subtables for foreign keys as well as the master 'gtd' table.
-  3. python insert_data.py
+  4. python insert_data.py
      Reads each line of gtd.csv and imports it into the chosen database.
 
 Detailed information about the database can be found online:
