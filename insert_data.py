@@ -222,7 +222,7 @@ try:
     os.system('tar xzvf cities.tgz')
     os.system('psql -d %s -U %s -f cities.sql' % (DATABASE, USER))
     cur.execute('update gtd set lat=cities.lat, lon=cities.lon from cities'
-                'where cities.id=gtd.id')
+                ' where cities.id=gtd.id')
     cur.execute('drop table cities')
     con.commit()
 

@@ -178,6 +178,9 @@ CREATE TABLE gtd
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT gtd_hostkidoutcome_fkey FOREIGN KEY (hostkidoutcome)
       REFERENCES hostage_outcomes (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT gtd_dbsource_fkey FOREIGN KEY (dbsource)
+      REFERENCES dbsources (name) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
