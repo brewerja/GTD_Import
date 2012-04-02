@@ -1,6 +1,12 @@
 Scripts and other tools to import the data from the Global Terrorism Database into a Postgresql database for further work.
 
-Steps to create and populate the database:
+To have a working database quickly populated with the data, download the setup package, which already contains a backup based off of commit 0a7f469621:
+  wget https://github.com/downloads/brewerja/GTD_Import/setup_package.tgz
+And execute setup.sh to do the heavy lifting.
+
+OR
+
+Steps to create and populate the database without using the scripts in this project and not the backup above:
   1. createdb -T template_postgis dbname
      (Optional) Create a postgis enabled database.
   2. Edit settings.py to reflect the desired username and database.
@@ -20,8 +26,4 @@ The gtd.csv file in this repository is a simple CSV export from Excel with the f
   Incident #200002250007 has a 'claimed' attribute of '2', which is non-valid and ignored.
 
 To be able to repopulate the database quickly, it's helpful to create a backup:
-  pgdump dbname -f gtd_database.sql
-
-Then download the setup package, which already contains a backup based off of commit eec88391c7:
-  wget https://github.com/downloads/brewerja/GTD_Import/setup_package.tgz
-And execute setup.sh to do the heavy lifting.
+  pg_dump dbname -f gtd_database.sql
