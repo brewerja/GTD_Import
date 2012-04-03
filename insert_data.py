@@ -211,6 +211,8 @@ try:
         # XV. Source Information
         scite1, scite2, scite3, dbsource = (pstr(l[120]), pstr(l[121]),
                                             pstr(l[122]), pstr(l[123]))
+        cur.execute("SELECT id FROM dbsources WHERE name=%s" % dbsource)
+        dbsource = cur.fetchone()[0]
         stmt = ("UPDATE gtd SET addnotes=%s, scite1=%s, scite2=%s, scite3=%s, "
                 "dbsource=%s where id=%s" % (addnotes, scite1, scite2, scite3,
                                              dbsource, id))
@@ -228,6 +230,9 @@ try:
 
     os.system('rm cities.sql')
     os.system('rm data/gtd.csv')
+
+    # Final step, create geography and geometry points from lat/lon pairs.
+    os.system('psql -d %s -U %s -f create_points.sql' % (DATABASE, USER))
 
 except psycopg2.DatabaseError, e:
     print 'Error %s' % e

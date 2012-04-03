@@ -27,8 +27,7 @@ try:
     cur = con.cursor()
 
     # Create the dbsources table and populate it.
-    cur.execute('CREATE TABLE dbsources(id INT PRIMARY KEY, name VARCHAR(45) '
-                'UNIQUE)')
+    cur.execute('CREATE TABLE dbsources(id INT PRIMARY KEY, name VARCHAR(40))')
     for source in dbsources_file:
         n = source.split('=')[0].strip()
         name = source.split('=')[1].strip()

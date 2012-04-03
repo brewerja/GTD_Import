@@ -1,0 +1,29 @@
+To create a PostGIS template to create spatially enabled databases, execute
+these statements from the psql command line as the postgres user:
+  sudo -u postgres psql
+
+  -- Create temlate_postgis database
+  CREATE DATABASE template_postgis WITH TEMPLATE = template1 ENCODING = 'UTF8';
+  \c template_postgis; -- Connect to the database
+  CREATE LANGUAGE plpgsql; -- Probably already exists
+  \i /usr/share/pgsql/contrib/postgis-64.sql;
+  \i /usr/share/pgsql/contrib/spatial_ref_sys.sql;
+  \i /usr/share/pgsql/contrib/postgis-1.5/postgis_comments.sql; -- If available
+  -- Mark the template_postgis database as a template
+  UPDATE pg_database SET datistemplate = TRUE WHERE datname = 'template_postgis';
+  GRANT ALL ON geometry_columns TO PUBLIC;
+  GRANT ALL ON spatial_ref_sys TO PUBLIC;
+
+To spatially enable a database at the time of creation:
+  CREATE DATABASE gtd WITH TEMPLATE = template_postgis;
+    or 
+  createdb -T template_postgis gtd
+
+Another option, which doesn't need a template is to spatially enable the
+database after creation:
+  createdb gtd
+  sudo -u postgres psql -f /usr/share/pgsql/contrib/postgis-64.sql gtd
+  sudo -u postgres psql -f /usr/share/pgsql/contrib/spatial_ref_sys.sql gtd
+
+Confirm that the database has been spatially enabled with:
+  SELECT postgis_full_version();

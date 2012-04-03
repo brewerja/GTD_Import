@@ -102,7 +102,7 @@ CREATE TABLE gtd
   scite1 character varying(500),
   scite2 character varying(500),
   scite3 character varying(500),
-  dbsource character varying(100),
+  dbsource integer,
   CONSTRAINT gtd_pkey PRIMARY KEY (id),
   CONSTRAINT gtd_country_fkey FOREIGN KEY (country)
       REFERENCES countries (id) MATCH SIMPLE
@@ -180,7 +180,7 @@ CREATE TABLE gtd
       REFERENCES hostage_outcomes (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT gtd_dbsource_fkey FOREIGN KEY (dbsource)
-      REFERENCES dbsources (name) MATCH SIMPLE
+      REFERENCES dbsources (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
