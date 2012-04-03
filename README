@@ -7,8 +7,7 @@ Execute setup.sh to do the heavy lifting.
 OR
 
 Steps to create and populate the database without using the scripts in this project and not the backup above:
-  1. createdb -T template_postgis dbname
-     Create a PostGIS enabled database. Read HOWTO for more information.
+  1. Create a PostGIS template (template_postgis). Read HOWTO for instructions.
   2. Edit settings.py to reflect the desired username and database.
   3. python create_tables.py
      Creates all the subtables for foreign keys as well as the master 'gtd' table.
