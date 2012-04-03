@@ -56,6 +56,11 @@ try:
     con = psycopg2.connect(database=DATABASE, user=USER)
     cur = con.cursor()
 
+    cur.execute('SELECT * FROM dbsources')
+    dbsources = {}
+    for p in cur.fetchall():
+        dbsources[str(p[1])] = p[0]
+
     # Traverse the csv file one line at a time.
     for l in reader:
 
@@ -210,12 +215,10 @@ try:
 
         # XV. Source Information
         scite1, scite2, scite3, dbsource = (pstr(l[120]), pstr(l[121]),
-                                            pstr(l[122]), pstr(l[123]))
-        cur.execute("SELECT id FROM dbsources WHERE name=%s" % dbsource)
-        dbsource = cur.fetchone()[0]
+                                            pstr(l[122]), l[123])
         stmt = ("UPDATE gtd SET addnotes=%s, scite1=%s, scite2=%s, scite3=%s, "
                 "dbsource=%s where id=%s" % (addnotes, scite1, scite2, scite3,
-                                             dbsource, id))
+                                             dbsources[dbsource], id))
         cur.execute(stmt)
 
     con.commit()
@@ -230,9 +233,6 @@ try:
 
     os.system('rm cities.sql')
     os.system('rm data/gtd.csv')
-
-    # Final step, create geography and geometry points from lat/lon pairs.
-    os.system('psql -d %s -U %s -f create_points.sql' % (DATABASE, USER))
 
 except psycopg2.DatabaseError, e:
     print 'Error %s' % e

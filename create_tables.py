@@ -19,9 +19,6 @@ damage_file = open('data/damage', 'r')
 hostage_outcomes_file = open('data/hostage_outcomes', 'r')
 dbsources_file = open('data/dbsources', 'r')
 
-# Create the PostGIS enabled database. See HOWTO for details.
-os.system('createdb -T template_postgis %s' % DATABASE)
-
 con = None
 
 try:
