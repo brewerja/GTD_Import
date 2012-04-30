@@ -70,7 +70,11 @@ try:
         print id
 
         # II. Incident Date
-        year, month, day = int(l[1]), int(l[2]), int(l[3])
+        year, month, day = intgr(l[1]), intgr(l[2]), intgr(l[3])
+        stmt = ("UPDATE gtd SET year=%s, month=%s, day=%s where id=%s" %
+                    (year, month, day, id))
+        cur.execute(stmt)
+
         if month in months and day in days:  # Unknowns are '0'
             date = '%d-%02d-%02d' % (year, month, day)
             cur.execute("UPDATE gtd SET date='%s' where id=%s" % (date, id))

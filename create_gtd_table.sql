@@ -5,6 +5,9 @@
 CREATE TABLE gtd
 (
   id bigint NOT NULL,
+  year integer,
+  month integer,
+  day integer,
   date date,
   approxdate character varying(100),
   extended boolean,

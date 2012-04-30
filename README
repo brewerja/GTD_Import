@@ -6,7 +6,7 @@ Execute setup.sh to do the heavy lifting.
 
 OR
 
-Steps to create and populate the database without using the scripts in this project and not the backup above:
+Steps to create and populate the database by using the scripts in this project and not the backup above:
   1. Create a PostGIS enabled database. Read HOWTO for more information.
        createdb -T template_postgis dbname
   2. Edit settings.py to reflect the desired username and database.
@@ -16,6 +16,8 @@ Steps to create and populate the database without using the scripts in this proj
        python insert_data.py
   5. Create points of two geospatial datatypes for all the attacks.
        psql -f create_points.sql dbname
+  6. Add number of attacks counts to the foreign key tables and create a similar table 'years'.
+       python counter.py dbname
 
 Detailed information about the database can be found online:
   http://www.start.umd.edu/gtd/downloads/Codebook.pdf
